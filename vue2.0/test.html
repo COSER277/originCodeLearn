@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<div id="app">
+			{{auth}}
+			<div class="test">{{auth}}</div>
+			<p c-text="auth"></p>
+			<ul>
+				<li>{{auth}}</li>
+				<li><h1>{{auth}}</h1></li>
+				<li><p>{{name}}</p></li>
+			</ul>
+			<input type="text" c-model="auth" />
+		</div>
+
+		<script src="./deep.js"></script>
+		<script src="./watcher.js"></script>
+		<script src="./observer.js"></script>
+		<script src="./compiler.js"></script>
+		<script src="./cos.js"></script>
+		<script>
+			function num(n) {
+				if (n == 1) {
+					return 1
+				}
+				return num(n - 1) + n
+			}
+			let sum = num(100)
+			console.log(sum, 'sum')
+			const vm = new Cos({
+				el: '#app',
+				data: {
+					auth: '册噩噩噩噩',
+					name: '水水水水水水'
+				}
+			})
+
+			// vm.$data.auth="sdsdssdsdsdsdd"
+		</script>
+	</body>
+</html>
