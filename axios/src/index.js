@@ -1,7 +1,8 @@
 import Axios from './core/axios-mini'
 
 
-let axios1=Axios.create({
+
+let axios=Axios.create({
     baseUrl:"http://xxxxxx:xxx",
     headers:{
         common:"121212",
@@ -9,14 +10,10 @@ let axios1=Axios.create({
     }
 })
 
-let axios2=Axios.create({
-    baseUrl:"http://localhost:xxx",
-    headers:{
-        common:"121212",
-        Authorization:"Bear sdsdsdsd"
-    }
+axios.get({
+    method:"get",
+    url:'./1.json'
 })
-console.log(axios1.default);
 
-console.log(axios2.default);
+axios.get('./1.json')
 

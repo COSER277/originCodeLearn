@@ -31,6 +31,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -42,14 +44,27 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 var Axios = /*#__PURE__*/function () {
-  function Axios(config) {
+  function Axios() {
     _classCallCheck(this, Axios);
 
     var _this = this;
 
     return new Proxy(_request__WEBPACK_IMPORTED_MODULE_2__.default, {
       apply: function apply(fn, thisArg, args) {
-        console.log(fn, thisArg, args);
+        var options = _this._preprocessArgs(undefined, args);
+
+        if (!options) {
+          if (args.length == 2) {
+            assert(typeof args[0] == 'string', 'args[0] must is string');
+            assert(_typeof(args[1]) == 'object' && args[1] && args[1].constructor == Object, 'args[1] must is JSON');
+            options = _objectSpread(_objectSpread({}, args[1]), {}, {
+              url: args[0]
+            });
+            console.log(options);
+          } else {
+            assert(false, 'invaild args');
+          }
+        }
       },
       set: function set(data, name, value) {
         _this[name] = value;
@@ -62,20 +77,88 @@ var Axios = /*#__PURE__*/function () {
   }
 
   _createClass(Axios, [{
+    key: "_preprocessArgs",
+    value: function _preprocessArgs(method) {
+      var options;
+      console.log("\u53C2\u6570\u957F\u5EA6".concat(arguments.length <= 1 ? 0 : arguments.length - 1, ",").concat(_typeof(arguments.length <= 1 ? undefined : arguments[1])));
+
+      if ((arguments.length <= 1 ? 0 : arguments.length - 1) == 1 && typeof (arguments.length <= 1 ? undefined : arguments[1]) == 'string') {
+        options = {
+          method: method,
+          url: arguments.length <= 1 ? undefined : arguments[1]
+        };
+        console.log("参数是String");
+      } else if ((arguments.length <= 1 ? 0 : arguments.length - 1) == 1 && _typeof(arguments.length <= 1 ? undefined : arguments[1]) == 'object') {
+        options = _objectSpread(_objectSpread({}, arguments.length <= 1 ? undefined : arguments[1]), {}, {
+          method: method
+        });
+        console.log("参数是对象");
+      } else {
+        return undefined;
+      }
+
+      return options;
+    }
+  }, {
     key: "get",
-    value: function get() {}
+    value: function get() {
+      console.log("GET");
+
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      var options = this._preprocessArgs('get', args);
+
+      console.log(options);
+
+      if (!options) {
+        console.log(args);
+
+        if (args.length == 2) {
+          _utils__WEBPACK_IMPORTED_MODULE_0__.default.assert(typeof args[0] == 'string', 'args[0] must is string');
+          _utils__WEBPACK_IMPORTED_MODULE_0__.default.assert(_typeof(args[1]) == 'object' && args[1] && args[1].constructor == Object, 'args[1] must is JSON');
+          options = _objectSpread(_objectSpread({}, args[1]), {}, {
+            url: args[0],
+            method: 'get'
+          });
+          console.log(options);
+        } else {
+          _utils__WEBPACK_IMPORTED_MODULE_0__.default.assert(false, 'invaild args');
+        }
+      }
+    }
   }, {
     key: "post",
-    value: function post() {}
+    value: function post() {
+      console.log("POST");
+
+      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+      }
+
+      var options = this._preprocessArgs('post', args);
+
+      if (!options) {}
+    }
   }, {
     key: "delete",
-    value: function _delete() {}
+    value: function _delete() {
+      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
+      }
+
+      var options = this._preprocessArgs('delete', args);
+
+      if (!options) {}
+    }
   }]);
 
   return Axios;
 }();
 
-Axios.create = Axios.prototype.create = function (params) {
+Axios.create = Axios.prototype.create = function () {
+  var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   var axios = new Axios();
 
   var res = _objectSpread({}, JSON.parse(JSON.stringify(_default__WEBPACK_IMPORTED_MODULE_1__.default)));
@@ -124,7 +207,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
 /* harmony export */ });
-function request() {}
+function request(options) {
+  var xhr = new XMLHttpRequest();
+  xhr.open(options.method, options.url, true);
+
+  for (var key in options.headers) {
+    xhr.setRequestHeader(key, options.headers[key]);
+  }
+
+  xhr.send(options.data);
+}
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (request);
 
@@ -198,22 +290,18 @@ var Utils = /*#__PURE__*/function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_axios_mini__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./core/axios-mini */ "./src/core/axios-mini.js");
 
-var axios1 = _core_axios_mini__WEBPACK_IMPORTED_MODULE_0__.default.create({
+var axios = _core_axios_mini__WEBPACK_IMPORTED_MODULE_0__.default.create({
   baseUrl: "http://xxxxxx:xxx",
   headers: {
     common: "121212",
     Authorization: "Bear sdsdsdsd"
   }
 });
-var axios2 = _core_axios_mini__WEBPACK_IMPORTED_MODULE_0__.default.create({
-  baseUrl: "http://localhost:xxx",
-  headers: {
-    common: "121212",
-    Authorization: "Bear sdsdsdsd"
-  }
+axios.get({
+  method: "get",
+  url: './1.json'
 });
-console.log(axios1["default"]);
-console.log(axios2["default"]);
+axios.get('./1.json');
 
 /***/ })
 
