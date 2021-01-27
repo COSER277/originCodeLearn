@@ -51,20 +51,9 @@ var Axios = /*#__PURE__*/function () {
 
     return new Proxy(_request__WEBPACK_IMPORTED_MODULE_2__.default, {
       apply: function apply(fn, thisArg, args) {
-        var options = _this._preprocessArgs(undefined, args);
+        var options = _this._preprocessArgs("get", args);
 
-        if (!options) {
-          if (args.length == 2) {
-            assert(typeof args[0] == 'string', 'args[0] must is string');
-            assert(_typeof(args[1]) == 'object' && args[1] && args[1].constructor == Object, 'args[1] must is JSON');
-            options = _objectSpread(_objectSpread({}, args[1]), {}, {
-              url: args[0]
-            });
-            console.log(options);
-          } else {
-            assert(false, 'invaild args');
-          }
-        }
+        _this._request(options);
       },
       set: function set(data, name, value) {
         _this[name] = value;
@@ -80,41 +69,56 @@ var Axios = /*#__PURE__*/function () {
     key: "_preprocessArgs",
     value: function _preprocessArgs(method) {
       var options;
-      console.log("\u53C2\u6570\u957F\u5EA6".concat(arguments.length <= 1 ? 0 : arguments.length - 1, ",").concat(_typeof(arguments.length <= 1 ? undefined : arguments[1])));
+      console.log("请求方式", method);
 
-      if ((arguments.length <= 1 ? 0 : arguments.length - 1) == 1 && typeof (arguments.length <= 1 ? undefined : arguments[1]) == 'string') {
-        options = {
-          method: method,
-          url: arguments.length <= 1 ? undefined : arguments[1]
-        };
-        console.log("参数是String");
-      } else if ((arguments.length <= 1 ? 0 : arguments.length - 1) == 1 && _typeof(arguments.length <= 1 ? undefined : arguments[1]) == 'object') {
-        options = _objectSpread(_objectSpread({}, arguments.length <= 1 ? undefined : arguments[1]), {}, {
+      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      if (args.length == 1 && _typeof(args[0]) == 'object') {
+        options = _objectSpread(_objectSpread({}, args[0][0]), {}, {
           method: method
         });
-        console.log("参数是对象");
       } else {
         return undefined;
-      }
+      } // console.log(options);
+
 
       return options;
     }
   }, {
+    key: "_request",
+    value: function _request(options) {
+      // console.log(options, '请求参数');
+      var _headers = this["default"].headers; //保留this.default.headers
+
+      delete this["default"].headers; //删除 this.default.headers
+
+      this["default"].method = options.method;
+      _utils__WEBPACK_IMPORTED_MODULE_0__.default.merge(options, this["default"]); //融合 设置得headers 
+
+      this["default"].headers = _headers; //恢复this.default.headers
+      //  baseUrl 合并
+
+      options.url = options.baseUrl + options.url;
+      delete options.baseUrl; // 发起真正XML请求
+
+      (0,_request__WEBPACK_IMPORTED_MODULE_2__.default)(options); //调用request.js暴露函数
+    }
+  }, {
     key: "get",
     value: function get() {
-      console.log("GET");
-
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
+      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
       }
 
       var options = this._preprocessArgs('get', args);
 
-      console.log(options);
+      options.method = "get";
+
+      this._request(options);
 
       if (!options) {
-        console.log(args);
-
         if (args.length == 2) {
           _utils__WEBPACK_IMPORTED_MODULE_0__.default.assert(typeof args[0] == 'string', 'args[0] must is string');
           _utils__WEBPACK_IMPORTED_MODULE_0__.default.assert(_typeof(args[1]) == 'object' && args[1] && args[1].constructor == Object, 'args[1] must is JSON');
@@ -131,21 +135,24 @@ var Axios = /*#__PURE__*/function () {
   }, {
     key: "post",
     value: function post() {
-      console.log("POST");
-
-      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
+      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
       }
 
+      // console.log("POST");
       var options = this._preprocessArgs('post', args);
+
+      options.method = "post";
+
+      this._request(options);
 
       if (!options) {}
     }
   }, {
     key: "delete",
     value: function _delete() {
-      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        args[_key3] = arguments[_key3];
+      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+        args[_key4] = arguments[_key4];
       }
 
       var options = this._preprocessArgs('delete', args);
@@ -208,6 +215,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
 /* harmony export */ });
 function request(options) {
+  console.log(options, "发起请求前参数");
   var xhr = new XMLHttpRequest();
   xhr.open(options.method, options.url, true);
 
@@ -291,17 +299,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_axios_mini__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./core/axios-mini */ "./src/core/axios-mini.js");
 
 var axios = _core_axios_mini__WEBPACK_IMPORTED_MODULE_0__.default.create({
-  baseUrl: "http://xxxxxx:xxx",
+  baseUrl: "http://47.107.111.241:3333",
   headers: {
     common: "121212",
     Authorization: "Bear sdsdsdsd"
   }
 });
 axios.get({
-  method: "get",
-  url: './1.json'
+  url: '/c/api',
+  headers: {
+    common: "X-XMLHttp-Request"
+  }
 });
-axios.get('./1.json');
+axios.post({
+  url: '/c/api',
+  headers: {
+    Authorization: "Bear 1212121",
+    common: "X-XMLHttp-Request"
+  },
+  params: {
+    name: "sdsd",
+    pwd: "sdsd"
+  }
+});
 
 /***/ })
 

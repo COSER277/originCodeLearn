@@ -1,5 +1,5 @@
 function request(options) {
-
+    console.log(options, "发起请求前参数");
     let xhr=new XMLHttpRequest()
     xhr.open(options.method,options.url,true)
     for (let key in options.headers) {

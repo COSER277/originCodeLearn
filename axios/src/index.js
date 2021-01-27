@@ -2,18 +2,30 @@ import Axios from './core/axios-mini'
 
 
 
-let axios=Axios.create({
-    baseUrl:"http://xxxxxx:xxx",
-    headers:{
-        common:"121212",
-        Authorization:"Bear sdsdsdsd"
+let axios = Axios.create({
+    baseUrl: "http://47.107.111.241:3333",
+    headers: {
+        common: "121212",
+        Authorization: "Bear sdsdsdsd"
     }
 })
 
 axios.get({
-    method:"get",
-    url:'./1.json'
+    url: '/c/api',
+    headers:{
+        common:"X-XMLHttp-Request"
+    }
 })
 
-axios.get('./1.json')
 
+axios.post({
+    url: '/c/api',
+    headers: {
+        Authorization: "Bear 1212121",
+        common:"X-XMLHttp-Request"
+    },
+    params: {
+        name: "sdsd",
+        pwd: "sdsd"
+    }
+})

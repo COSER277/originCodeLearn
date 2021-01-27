@@ -8,26 +8,8 @@ class Axios {
         let _this = this;
         return new Proxy(request, {
             apply(fn, thisArg, args) {
-                let options = _this._preprocessArgs(undefined, args);
-                if (!options) {
-                    if (args.length == 2) {
-                        assert(typeof args[0] == 'string', 'args[0] must is string');
-                        assert(
-                            typeof args[1] == 'object' &&
-                            args[1] &&
-                            args[1].constructor == Object,
-                            'args[1] must is JSON',
-                        );
-
-                        options = {
-                            ...args[1],
-                            url: args[0],
-                        };
-                        console.log(options);
-                    } else {
-                        assert(false, 'invaild args');
-                    }
-                }
+                let options = _this._preprocessArgs("get", args);
+                _this._request(options)
             },
             set(data, name, value) {
                 _this[name] = value
@@ -40,35 +22,39 @@ class Axios {
     }
     _preprocessArgs(method, ...args) {
         let options;
-        console.log(`参数长度${args.length},${typeof args[0]}`);
-
-        if (args.length == 1 && typeof args[0] == 'string') {
+        console.log("请求方式",method);
+        if (args.length == 1 && typeof args[0] == 'object') {
             options = {
-                method,
-                url: args[0]
-            };
-            console.log("参数是String");
-
-        } else if (args.length == 1 && typeof args[0] == 'object') {
-            options = {
-                ...args[0],
+                ...args[0][0],
                 method,
             };
-            console.log("参数是对象");
         } else {
             return undefined;
         }
 
+        // console.log(options);
         return options;
+    }
+    _request(options) {
+        // console.log(options, '请求参数');
+        let _headers = this.default.headers //保留this.default.headers
+        delete this.default.headers //删除 this.default.headers
+        this.default.method=options.method
+        utils.merge(options, this.default); //融合 设置得headers 
+        this.default.headers = _headers //恢复this.default.headers
+        //  baseUrl 合并
+        options.url=options.baseUrl+options.url
+        delete options.baseUrl
+        // 发起真正XML请求
+        
+        request(options) //调用request.js暴露函数
     }
 
     get(...args) {
-        console.log("GET");
         let options = this._preprocessArgs('get', args);
-        console.log(options);
-
+        options.method="get"
+        this._request(options);
         if (!options) {
-            console.log(args);
             if (args.length == 2) {
                 utils.assert(typeof args[0] == 'string', 'args[0] must is string');
                 utils.assert(
@@ -90,9 +76,10 @@ class Axios {
         }
     }
     post(...args) {
-        console.log("POST");
+        // console.log("POST");
         let options = this._preprocessArgs('post', args);
-
+        options.method="post"
+        this._request(options);
         if (!options) {}
     }
 
