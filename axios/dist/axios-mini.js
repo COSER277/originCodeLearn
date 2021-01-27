@@ -102,8 +102,18 @@ var Axios = /*#__PURE__*/function () {
 
       options.url = options.baseUrl + options.url;
       delete options.baseUrl; // 发起真正XML请求
+      //调用request.js暴露函数
 
-      (0,_request__WEBPACK_IMPORTED_MODULE_2__.default)(options); //调用request.js暴露函数
+      return new Promise(function (resolve, reject) {
+        return (0,_request__WEBPACK_IMPORTED_MODULE_2__.default)(options).then(function (xhr) {
+          resolve({
+            status: xhr.status,
+            data: xhr.response
+          });
+        }, function (xhr) {
+          reject(xhr);
+        });
+      });
     }
   }, {
     key: "get",
@@ -115,8 +125,6 @@ var Axios = /*#__PURE__*/function () {
       var options = this._preprocessArgs('get', args);
 
       options.method = "get";
-
-      this._request(options);
 
       if (!options) {
         if (args.length == 2) {
@@ -131,6 +139,8 @@ var Axios = /*#__PURE__*/function () {
           _utils__WEBPACK_IMPORTED_MODULE_0__.default.assert(false, 'invaild args');
         }
       }
+
+      return this._request(options);
     }
   }, {
     key: "post",
@@ -143,8 +153,7 @@ var Axios = /*#__PURE__*/function () {
       var options = this._preprocessArgs('post', args);
 
       options.method = "post";
-
-      this._request(options);
+      return this._request(options);
 
       if (!options) {}
     }
@@ -215,7 +224,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
 /* harmony export */ });
 function request(options) {
-  console.log(options, "发起请求前参数");
   var xhr = new XMLHttpRequest();
   xhr.open(options.method, options.url, true);
 
@@ -224,6 +232,18 @@ function request(options) {
   }
 
   xhr.send(options.data);
+  return new Promise(function (resolve, reject) {
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(xhr);
+        } else {
+          reject(xhr);
+        } // console.log(result, "gggg");
+
+      }
+    };
+  });
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (request);
@@ -310,18 +330,23 @@ axios.get({
   headers: {
     common: "X-XMLHttp-Request"
   }
-});
-axios.post({
-  url: '/c/api',
-  headers: {
-    Authorization: "Bear 1212121",
-    common: "X-XMLHttp-Request"
-  },
-  params: {
-    name: "sdsd",
-    pwd: "sdsd"
-  }
-});
+}).then(function (res) {
+  console.log(res);
+}); // axios.post({
+//     url: '/c/api',
+//     headers: {
+//         Authorization: "Bear 1212121",
+//         common:"X-XMLHttp-Request"
+//     },
+//     params: {
+//         name: "sdsd",
+//         pwd: "sdsd"
+//     }
+// }).then(res=>{
+//     console.log(res)
+// }).catch(e=>{
+//     console.log(e);
+// })
 
 /***/ })
 

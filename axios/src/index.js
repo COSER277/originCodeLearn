@@ -15,17 +15,23 @@ axios.get({
     headers:{
         common:"X-XMLHttp-Request"
     }
+}).then(res=>{
+    console.log(res)
 })
 
 
-axios.post({
-    url: '/c/api',
-    headers: {
-        Authorization: "Bear 1212121",
-        common:"X-XMLHttp-Request"
-    },
-    params: {
-        name: "sdsd",
-        pwd: "sdsd"
-    }
-})
+// axios.post({
+//     url: '/c/api',
+//     headers: {
+//         Authorization: "Bear 1212121",
+//         common:"X-XMLHttp-Request"
+//     },
+//     params: {
+//         name: "sdsd",
+//         pwd: "sdsd"
+//     }
+// }).then(res=>{
+//     console.log(res)
+// }).catch(e=>{
+//     console.log(e);
+// })

@@ -22,7 +22,7 @@ class Axios {
     }
     _preprocessArgs(method, ...args) {
         let options;
-        console.log("请求方式",method);
+        console.log("请求方式", method);
         if (args.length == 1 && typeof args[0] == 'object') {
             options = {
                 ...args[0][0],
@@ -39,21 +39,32 @@ class Axios {
         // console.log(options, '请求参数');
         let _headers = this.default.headers //保留this.default.headers
         delete this.default.headers //删除 this.default.headers
-        this.default.method=options.method
+        this.default.method = options.method
         utils.merge(options, this.default); //融合 设置得headers 
         this.default.headers = _headers //恢复this.default.headers
         //  baseUrl 合并
-        options.url=options.baseUrl+options.url
+        options.url = options.baseUrl + options.url
         delete options.baseUrl
         // 发起真正XML请求
-        
-        request(options) //调用request.js暴露函数
+        //调用request.js暴露函数
+        return new Promise((resolve, reject) => {
+            return request(options).then(
+                xhr => {
+                    resolve({
+                        status:xhr.status,
+                        data: (xhr.response)
+                    })
+                }, xhr => {
+                    reject(xhr)
+                },
+            )
+        })
     }
 
     get(...args) {
         let options = this._preprocessArgs('get', args);
-        options.method="get"
-        this._request(options);
+        options.method = "get"
+
         if (!options) {
             if (args.length == 2) {
                 utils.assert(typeof args[0] == 'string', 'args[0] must is string');
@@ -74,12 +85,13 @@ class Axios {
                 utils.assert(false, 'invaild args');
             }
         }
+        return this._request(options);
     }
     post(...args) {
         // console.log("POST");
         let options = this._preprocessArgs('post', args);
-        options.method="post"
-        this._request(options);
+        options.method = "post"
+        return this._request(options);
         if (!options) {}
     }
 
