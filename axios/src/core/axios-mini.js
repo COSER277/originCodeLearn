@@ -51,13 +51,16 @@ class Axios {
             return request(options).then(
                 xhr => {
                     resolve({
-                        status:xhr.status,
-                        data: (xhr.response)
+                        status: xhr.status,
+                        data: JSON.parse(xhr.response)
                     })
-                }, xhr => {
-                    reject(xhr)
-                },
-            )
+                }
+            ).catch(xhr => {
+                reject({
+                    status: xhr.status,
+                    data: JSON.parse(xhr.response)
+                })
+            })
         })
     }
 

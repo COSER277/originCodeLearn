@@ -5,7 +5,7 @@ function request(options) {
         xhr.setRequestHeader(key, options.headers[key])
     }
     xhr.send(options.data);
-    return new Promise((resolve, reject) => {
+    let promise= new Promise((resolve, reject) => {
         xhr.onreadystatechange = () => {
             if (xhr.readyState == 4) {
                 if (xhr.status >= 200 && xhr.status < 300) {
@@ -16,6 +16,7 @@ function request(options) {
             }
         };
     });
+    return promise
 }
 
 export default request

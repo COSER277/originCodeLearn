@@ -108,10 +108,13 @@ var Axios = /*#__PURE__*/function () {
         return (0,_request__WEBPACK_IMPORTED_MODULE_2__.default)(options).then(function (xhr) {
           resolve({
             status: xhr.status,
-            data: xhr.response
+            data: JSON.parse(xhr.response)
           });
-        }, function (xhr) {
-          reject(xhr);
+        })["catch"](function (xhr) {
+          reject({
+            status: xhr.status,
+            data: JSON.parse(xhr.response)
+          });
         });
       });
     }
@@ -232,7 +235,7 @@ function request(options) {
   }
 
   xhr.send(options.data);
-  return new Promise(function (resolve, reject) {
+  var promise = new Promise(function (resolve, reject) {
     xhr.onreadystatechange = function () {
       if (xhr.readyState == 4) {
         if (xhr.status >= 200 && xhr.status < 300) {
@@ -244,6 +247,7 @@ function request(options) {
       }
     };
   });
+  return promise;
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (request);
@@ -332,21 +336,24 @@ axios.get({
   }
 }).then(function (res) {
   console.log(res);
-}); // axios.post({
-//     url: '/c/api',
-//     headers: {
-//         Authorization: "Bear 1212121",
-//         common:"X-XMLHttp-Request"
-//     },
-//     params: {
-//         name: "sdsd",
-//         pwd: "sdsd"
-//     }
-// }).then(res=>{
-//     console.log(res)
-// }).catch(e=>{
-//     console.log(e);
-// })
+})["catch"](function (e) {
+  console.log(e);
+});
+axios.post({
+  url: '/c/api',
+  headers: {
+    Authorization: "Bear 1212121",
+    common: "X-XMLHttp-Request"
+  },
+  params: {
+    name: "sdsd",
+    pwd: "sdsd"
+  }
+}).then(function (res) {
+  console.log(res);
+})["catch"](function (e) {
+  console.log(e);
+});
 
 /***/ })
 
