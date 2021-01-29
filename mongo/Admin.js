@@ -1,7 +1,10 @@
 
 const mongoose=require("mongoose")
 const Schema=mongoose.Schema({
-   
+    Center:{
+       type:mongoose.SchemaTypes.ObjectId,
+       ref:"center"
+   }
 })
 const Admin = mongoose.model("Admin", Schema,"Admin")
 // Admin.insertMany({

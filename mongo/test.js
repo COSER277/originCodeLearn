@@ -3,14 +3,14 @@ const opertor = require('./common')
 
 
 
-opertor.selectByOpts("Admin", {},{PageNumber:1,PageSize:1}).then(res => {
+opertor.selectByOpts("Admin", {},{PageNumber:1,PageSize:50}).then(res => {
     console.log(res);
 }).catch(e => {
     console.error(e);
 })
 
 // opertor.insertOne("Admin", {
-//     NickName: "TTTT"
+//     Center: "5ffece7677f6b54a7c3b3276"
 // }).then(res=>{
 //     console.log(res);
 // }).catch(e=>{
@@ -31,9 +31,9 @@ opertor.selectByOpts("Admin", {},{PageNumber:1,PageSize:1}).then(res => {
 // })
 
 // opertor.updateByOpt("Admin", {
-//     _id: "60140be969c16e66f0bcc7c6"
+//     _id: "601413b255457237b4758225"
 // }, {
-//     Name: "ssdsdsd"
+//     Center: "5ffecf8b77f6b54a7c3b3278"
 // }).then(res => {
 //     console.log(res);
 // }).catch(e => {

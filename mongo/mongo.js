@@ -38,7 +38,12 @@ db.on('close', function () {
  **注册需要的集合
  */
 
-const Admin = mongoose.model("Admin", mongoose.Schema(null), "Admin")
+const Admin = mongoose.model("Admin", mongoose.Schema({
+    Center:{
+       type:mongoose.SchemaTypes.ObjectId,
+       ref:"Center"
+   }
+}), "Admin")
 const Center = mongoose.model("Center", mongoose.Schema(), "Center")
 const Department = mongoose.model("Department", mongoose.Schema(), "Department")
 const Employee = mongoose.model("Employee", mongoose.Schema(), "Employee")

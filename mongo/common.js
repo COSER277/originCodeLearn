@@ -23,7 +23,7 @@ class Conmon {
                     console.log(Pager);
                     const result = await Collects[model].find().where(options)
                         .skip((Pager.PageNumber - 1) * (Pager.PageSize))
-                        .limit(Pager.PageSize == 0 ? false : Pager.PageSize)
+                        .limit(Pager.PageSize == 0 ? false : Pager.PageSize).populate()
                     resolve(result)
                 } catch (error) {
                     reject(error)
