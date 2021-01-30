@@ -2,7 +2,7 @@
 const mongoose = require("mongoose")
 const CONFIG = {
     dev: {
-        URL: "mongodb://127.0.0.1:27017/wlink?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
+        URL: "mongodb://127.0.0.1:27017/Test?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
     }
 }
 //数据库配置
@@ -38,38 +38,10 @@ db.on('close', function () {
  **注册需要的集合
  */
 
-const Admin = mongoose.model("Admin", mongoose.Schema({
-    Center:{
-       type:mongoose.SchemaTypes.ObjectId,
-       ref:"Center"
-   },
-   Datas:{
-       type:Array,
-       default:[]
-   }
-}), "Admin")
-const Center = mongoose.model("Center", mongoose.Schema(), "Center")
-const Department = mongoose.model("Department", mongoose.Schema(), "Department")
-const Employee = mongoose.model("Employee", mongoose.Schema(), "Employee")
-const Ticket = mongoose.model("Ticket", mongoose.Schema(), "Ticket")
-const TicketApply = mongoose.model("TicketApply", mongoose.Schema(), "TicketApply")
-const Process = mongoose.model("Process", mongoose.Schema(), "Process")
-const Leave = mongoose.model("Leave", mongoose.Schema(), "Leave")
+const schemas=require("./schemas")
 
-
-let Collects = {
-    Admin,
-    Center,
-    Department,
-    Employee,
-    Ticket,
-    TicketApply,
-    Process,
-    Leave
-}
-
-// console.log(Collects);
+// console.log(schemas);
 module.exports = {
-    Collects: Collects,
+    Collects: {...schemas},
     db
 }

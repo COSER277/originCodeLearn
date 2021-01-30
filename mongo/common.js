@@ -27,7 +27,7 @@ class Conmon {
                     const result = await Collects[model].find().where(options)
                         .skip((Pager.PageNumber - 1) * (Pager.PageSize))
                         .limit(Pager.PageSize == 0 ? false : Pager.PageSize)
-                        .populate("Center")
+                        .populate("User","-OaPassword").populate("Center").populate("Department").populate("Processor","-Password")
                         .sort(OrderBy.Key ? {
                             [OrderBy.Key]: OrderBy.Order
                         } : {})
@@ -49,7 +49,7 @@ class Conmon {
         if (typeof key == 'string' || 'number') {
             return new Promise(async (resolve, reject) => {
                 try {
-                    const result = await Collects[model].findById(key)
+                    const result = await Collects[model].findById(key).populate("User","-OaPassword").populate("Center").populate("Department").populate("Processor","-Password")
                     resolve(result)
                 } catch (error) {
                     reject(error)
