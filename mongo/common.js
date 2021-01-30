@@ -15,7 +15,7 @@ class Conmon {
     async selectByOpts(model, options, Pager = {
         PageNumber: 1,
         PageSize: 0
-    }) {
+    },OrderBy={Key:"",Order:"-1"}) {
         let _this = this
         if (typeof options == 'object' && typeof Pager == 'object') {
             return new Promise(async (resolve, reject) => {
@@ -23,7 +23,9 @@ class Conmon {
                     console.log(Pager);
                     const result = await Collects[model].find().where(options)
                         .skip((Pager.PageNumber - 1) * (Pager.PageSize))
-                        .limit(Pager.PageSize == 0 ? false : Pager.PageSize).populate()
+                        .limit(Pager.PageSize == 0 ? false : Pager.PageSize)
+                        .populate("Center")
+                        .sort(OrderBy.Key?{[OrderBy.Key]:OrderBy.Order}:{})
                     resolve(result)
                 } catch (error) {
                     reject(error)

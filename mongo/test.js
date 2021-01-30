@@ -3,7 +3,7 @@ const opertor = require('./common')
 
 
 
-opertor.selectByOpts("Admin", {},{PageNumber:1,PageSize:50}).then(res => {
+opertor.selectByOpts("Admin", {},{PageNumber:1,PageSize:50},{Key:"LevelCode",Order:-1}).then(res => {
     console.log(res);
 }).catch(e => {
     console.error(e);
