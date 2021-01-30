@@ -42,6 +42,10 @@ const Admin = mongoose.model("Admin", mongoose.Schema({
     Center:{
        type:mongoose.SchemaTypes.ObjectId,
        ref:"Center"
+   },
+   Datas:{
+       type:Array,
+       default:[]
    }
 }), "Admin")
 const Center = mongoose.model("Center", mongoose.Schema(), "Center")

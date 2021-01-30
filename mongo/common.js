@@ -6,16 +6,19 @@ class Conmon {
     constructor() {
 
     }
-   /**
-    * 根据条件对象查询条件列表数据
-    * @param {*} model 模型
-    * @param {*} options 条件
-    * @param {*} Pager 分页
-    */
+    /**
+     * 根据条件对象查询条件列表数据
+     * @param {*} model 模型
+     * @param {*} options 条件
+     * @param {*} Pager 分页
+     */
     async selectByOpts(model, options, Pager = {
         PageNumber: 1,
         PageSize: 0
-    },OrderBy={Key:"",Order:"-1"}) {
+    }, OrderBy = {
+        Key: "",
+        Order: "-1"
+    }) {
         let _this = this
         if (typeof options == 'object' && typeof Pager == 'object') {
             return new Promise(async (resolve, reject) => {
@@ -25,7 +28,9 @@ class Conmon {
                         .skip((Pager.PageNumber - 1) * (Pager.PageSize))
                         .limit(Pager.PageSize == 0 ? false : Pager.PageSize)
                         .populate("Center")
-                        .sort(OrderBy.Key?{[OrderBy.Key]:OrderBy.Order}:{})
+                        .sort(OrderBy.Key ? {
+                            [OrderBy.Key]: OrderBy.Order
+                        } : {})
                     resolve(result)
                 } catch (error) {
                     reject(error)
@@ -44,7 +49,7 @@ class Conmon {
         if (typeof key == 'string' || 'number') {
             return new Promise(async (resolve, reject) => {
                 try {
-                    const result = await db[model].findById(key)
+                    const result = await Collects[model].findById(key)
                     resolve(result)
                 } catch (error) {
                     reject(error)
@@ -73,6 +78,33 @@ class Conmon {
             throw new Error('doc argument must be is a object!');
         }
     }
+
+    async insertToFiled(model, key, field, doc) {
+
+        if (typeof field == 'string') {
+            new Promise(async (resolve, reject) => {
+                try {
+                    const data = await Collects[model].findByIdAndUpdate(key)
+                    if (data[field]) {
+                        if (data[field] instanceof Object) {
+                            data[field].push(doc)
+                            console.log(data[field] instanceof Array,"推入");
+                        }
+                        await data.save()
+                        // console.log(data);
+                        
+                    }
+                    resolve(data)
+                } catch (error) {
+                    reject(error)
+                }
+            })
+        } else {
+            throw new Error('field argument must be is a string!');
+        }
+    }
+
+
     /**
      * 根据条件删除文档
      * @param {*} model 模型

@@ -3,13 +3,23 @@ const opertor = require('./common')
 
 
 
-opertor.selectByOpts("Admin", {},{PageNumber:1,PageSize:50},{Key:"LevelCode",Order:-1}).then(res => {
+opertor.selectByOpts("Admin", {}, {
+    PageNumber: 1,
+    PageSize: 50
+}, {
+    Key: "LevelCode",
+    Order: -1
+}).then(res => {
     console.log(res);
 }).catch(e => {
     console.error(e);
 })
-
-// opertor.insertOne("Admin", {
+// opertor.insertToFiled("Admin", "6014da5c629fed3c28cc0b31", "Datas", {Id:"5ffece7677f6b54a7c3b3276"}).then(res => {
+//     console.log(res);
+// }).catch(e => {
+//     console.error(e);
+// })
+// opertor.insertOne("Center", {
 //     Center: "5ffece7677f6b54a7c3b3276"
 // }).then(res=>{
 //     console.log(res);
@@ -31,11 +41,11 @@ opertor.selectByOpts("Admin", {},{PageNumber:1,PageSize:50},{Key:"LevelCode",Ord
 // })
 
 // opertor.updateByOpt("Admin", {
-//     _id: "601413b255457237b4758225"
+//     _id: "5ffd8e1a2dc51442e031c6a2"
 // }, {
-//     Center: "5ffecf8b77f6b54a7c3b3278"
+//     Datas:2,
 // }).then(res => {
-//     console.log(res);
+//     // console.log(res);
 // }).catch(e => {
 //     console.error(e);
 // })
